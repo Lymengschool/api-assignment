@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
 use App\Models\Products;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 
 /**
  * @OA\Tag(
@@ -15,36 +17,27 @@ use App\Models\Products;
 class ProductsController extends Controller
 {
     /**
-     * @OA\Get(
-     *     path="/api/products",
-     *     tags={"Products"},
-     *     @OA\Response(response="200", description="Display a listing of products")
-     * )
+     * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $products = Products::with(['category' => function ($query) {
+            $query->select('id', 'name', 'contactName', 'phoneNumber');
+        }, 'supplier' => function ($query) {
+            $query->select('id', 'name');
+        }])->get();
+    
+        return $products;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Show the form for creating a new product.
     public function create()
     {
-        //
+        return view('products.create');
     }
 
     /**
-     * @OA\Post(
-     *     path="/api/products",
-     *     tags={"Products"},
-     *     @OA\RequestBody(
-     *         description="Product to store",
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/StoreProductsRequest")
-     *     ),
-     *     @OA\Response(response="201", description="Store a newly created product in storage")
-     * )
+     * Store a newly created resource in storage.
      */
     public function store(StoreProductsRequest $request)
     {
@@ -52,24 +45,11 @@ class ProductsController extends Controller
     }
 
     /**
-     * @OA\Get(
-     *     path="/api/products/{id}",
-     *     tags={"Products"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(response="200", description="Display the specified product")
-     * )
+     * Display the specified resource.
      */
     public function show(Products $products)
     {
-        //
-    }
+        $resource = Products::find($product);
 
     /**
      * Show the form for editing the specified resource.
@@ -80,24 +60,7 @@ class ProductsController extends Controller
     }
 
     /**
-     * @OA\Put(
-     *     path="/api/products/{id}",
-     *     tags={"Products"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\RequestBody(
-     *         description="Product to update",
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/UpdateProductsRequest")
-     *     ),
-     *     @OA\Response(response="200", description="Update the specified product in storage")
-     * )
+     * Update the specified resource in storage.
      */
     public function update(UpdateProductsRequest $request, Products $products)
     {
@@ -105,19 +68,7 @@ class ProductsController extends Controller
     }
 
     /**
-     * @OA\Delete(
-     *     path="/api/products/{id}",
-     *     tags={"Products"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(response="204", description="Remove the specified product from storage")
-     * )
+     * Remove the specified resource from storage.
      */
     public function destroy(Products $products)
     {
