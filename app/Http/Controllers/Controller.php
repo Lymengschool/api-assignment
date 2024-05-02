@@ -7,7 +7,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 /**
  * @OA\Info(
- *    title="APIs For Thrift Store",
+ *    title="APIs For Product CRUD",
  *    version="1.0.0",
  * ),
  *   @OA\SecurityScheme(

@@ -1,0 +1,157 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "APIs For Thrift Store",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "operationId": "e8dee54b09adbe3622e56a4f4f19ecb0",
+                "responses": {
+                    "200": {
+                        "description": "Display a list of products"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "operationId": "5d7ee765feb2052f10363a3d121ebd5e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreProductsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Create a new product"
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "operationId": "b2dc537014e0b7a417594278d020f99d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Display the specified product"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "operationId": "1b73c420e0cf9fb1cb88dcf445b9428b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProductsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Update the specified product"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "operationId": "4618152b49c17cc0c19dfed9ba73aa46",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete the specified product"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "StoreProductsRequest": {
+                "properties": {
+                    "name": {
+                        "description": "The name of the product",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "The description of the product",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateProductsRequest": {
+                "properties": {
+                    "name": {
+                        "description": "The name of the product",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "The description of the product",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
