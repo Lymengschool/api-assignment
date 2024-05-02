@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
 use App\Models\Products;
+use GuzzleHttp\Psr7\Message;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
@@ -13,31 +14,24 @@ class ProductsController extends Controller
     // Display a listing of the products.
     public function index()
     {
-        $products = Products::all();
-        return $products ;
+        $products = Products::with('supplier', 'category')->get();
+        return $products;
     }
-
-    // Show the form for creating a new product.
-    public function create()
-    {
-        return view('products.create');
-    }
-
     // Store a newly created product in storage.
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'categoryId' => 'required|exists:categories,id',
-            'supplierId' => 'required|exists:suppliers,id',
-        ]);
+{
+    $request->validate([
+        'name' => 'required',
+        'price' => 'required|numeric',
+        'categoryId' => 'required|exists:categories,id',
+        'supplierId' => 'required|exists:suppliers,id',
+    ]);
 
-        Products::create($request->all());
+    Products::create($request->all());
 
-        return redirect()->route('products.index')
-                        ->with('success','Product created successfully.');
-    }
+    return response()->json(['message' => 'Product created successfully'], 200);
+}
+
 
     // Display the specified product.
     public function show(Products $product)

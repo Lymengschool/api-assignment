@@ -28,8 +28,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/products', [ProductsController::class, 'index']);
 
-// Create a new product
 Route::post('/products', [ProductsController::class, 'store']);
+
 
 // Retrieve a specific product
 Route::get('/products/{product}', [ProductsController::class, 'show']);
