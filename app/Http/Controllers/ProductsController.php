@@ -8,26 +8,13 @@ use App\Models\Products;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
-/**
- * @OA\Tag(
- *     name="Products",
- *     description="Operations about products"
- * )
- */
 class ProductsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Display a listing of the products.
     public function index()
     {
-        $products = Products::with(['category' => function ($query) {
-            $query->select('id', 'name', 'contactName', 'phoneNumber');
-        }, 'supplier' => function ($query) {
-            $query->select('id', 'name');
-        }])->get();
-    
-        return $products;
+        $products = Products::all();
+        return $products ;
     }
 
     // Show the form for creating a new product.
@@ -36,42 +23,71 @@ class ProductsController extends Controller
         return view('products.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreProductsRequest $request)
+    // Store a newly created product in storage.
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'categoryId' => 'required|exists:categories,id',
+            'supplierId' => 'required|exists:suppliers,id',
+        ]);
+
+        Products::create($request->all());
+
+        return redirect()->route('products.index')
+                        ->with('success','Product created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Products $products)
+    // Display the specified product.
+    public function show(Products $product)
     {
         $resource = Products::find($product);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Products $products)
-    {
-        //
+        // Check if the resource exists
+        if (!$resource) {
+            // Return a 404 response if the resource is not found
+            return response()->json(['message' => 'Resource not found'], 404);
+        }
+
+        // Return the resource
+        return response()->json($resource);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateProductsRequest $request, Products $products)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Products $products)
-    {
-        //
+   // Update the specified product in storage.
+public function update(Request $request, $id)
+{
+    try {
+        $product = Products::findOrFail($id);
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'categoryId' => 'required|exists:categories,id',
+            'supplierId' => 'required|exists:suppliers,id',
+        ]);
+        $product->update($request->all());
+        return redirect()->route('products.index')->with('success', 'Product updated successfully');
+    } catch (ModelNotFoundException $e) {
+        return response()->json(['message' => 'Product not found'], 404);
     }
+}
+
+
+        public function destroy(Products $product)
+        {
+            // Check if the product exists
+            if (!$product) {
+                // Return a 404 response if the product is not found
+                return response()->json(['message' => 'Product not found'], 404);
+            }
+
+            // Delete the product
+            $product->delete();
+
+            // Return a success response
+            return response()->json(['message' => 'Product deleted successfully'], 200);
+        }
+
+    
 }
