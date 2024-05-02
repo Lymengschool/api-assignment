@@ -1,13 +1,19 @@
 <?php
+use OpenApi\Annotations as OA;
 
 /**
  * @OA\Info(
- *      version="1.0.0",
- *      title="Your API Title",
- *      description="Your API Description",
- *      @OA\Contact(
- *          email="contact@example.com"
- *      ),
+ *     title="My First API",
+ *     version="1.0.0",
+ *     description="This is a sample server for a pet store.",
+ *     termsOfService="http://swagger.io/terms/",
+ *     @OA\Contact(
+ *         email="support@example.com"
+ *     ),
+ *     @OA\License(
+ *         name="Apache 2.0",
+ *         url="http://www.apache.org/licenses/LICENSE-2.0.html"
+ *     )
  * )
  */
 

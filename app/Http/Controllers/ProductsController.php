@@ -11,77 +11,105 @@ use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
-    // Display a listing of the products.
+  /**
+     * @OA\Get(
+     *     path="/products/{id}",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Display the specified product")
+     * )
+     */
     public function index()
     {
-        $products = Products::with('supplier', 'category')->get();
-        return $products;
+        $products = Products::all();
+        return $products ;
     }
+
+    // Show the form for creating a new product.
+    public function create()
+    {
+        return view('products.create');
+    }
+
     // Store a newly created product in storage.
     public function store(Request $request)
-{
-    $request->validate([
-        'name' => 'required',
-        'price' => 'required|numeric',
-        'categoryId' => 'required|exists:categories,id',
-        'supplierId' => 'required|exists:suppliers,id',
-    ]);
-
-    Products::create($request->all());
-
-    return response()->json(['message' => 'Product created successfully'], 200);
-}
-
-
-    // Display the specified product.
-    public function show(Products $product)
     {
-        $resource = Products::find($product);
-
-        // Check if the resource exists
-        if (!$resource) {
-            // Return a 404 response if the resource is not found
-            return response()->json(['message' => 'Resource not found'], 404);
-        }
-
-        // Return the resource
-        return response()->json($resource);
-    }
-
-
-   // Update the specified product in storage.
-public function update(Request $request, $id)
-{
-    try {
-        $product = Products::findOrFail($id);
         $request->validate([
             'name' => 'required',
             'price' => 'required|numeric',
             'categoryId' => 'required|exists:categories,id',
             'supplierId' => 'required|exists:suppliers,id',
         ]);
-        $product->update($request->all());
-        return redirect()->route('products.index')->with('success', 'Product updated successfully');
-    } catch (ModelNotFoundException $e) {
-        return response()->json(['message' => 'Product not found'], 404);
+
+        Products::create($request->all());
+
+        return redirect()->route('products.index')
+                        ->with('success','Product created successfully.');
     }
-}
 
+    // Display the specified product.
+    public function show(Products $product)
+    {
+        //
+    }
 
-        public function destroy(Products $product)
-        {
-            // Check if the product exists
-            if (!$product) {
-                // Return a 404 response if the product is not found
-                return response()->json(['message' => 'Product not found'], 404);
-            }
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Products $products)
+    {
+        //
+    }
 
-            // Delete the product
-            $product->delete();
+    /**
+     * @OA\Put(
+     *     path="/products/{id}",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Product to update",
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/UpdateProductsRequest")
+     *     ),
+     *     @OA\Response(response="200", description="Update the specified product in storage")
+     * )
+     */
+    public function update(UpdateProductsRequest $request, Products $products)
+    {
+        //
+    }
 
-            // Return a success response
-            return response()->json(['message' => 'Product deleted successfully'], 200);
-        }
-
-    
+    /**
+     * @OA\Delete(
+     *     path="/products/{id}",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(response="204", description="Remove the specified product from storage")
+     * )
+     */
+    public function destroy(Products $products)
+    {
+        //
+    }
 }
