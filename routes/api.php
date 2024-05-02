@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * @OA\Info(
+ *      version="1.0.0",
+ *      title="Your API Title",
+ *      description="Your API Description",
+ *      @OA\Contact(
+ *          email="contact@example.com"
+ *      ),
+ * )
+ */
+
 use App\Http\Controllers\ProductsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
