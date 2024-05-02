@@ -17,7 +17,9 @@ class SuppliersFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->company,
+            'contactName' => $this->faker->name,
+            'phoneNumber' => $this->faker->phoneNumber,
         ];
     }
 }
